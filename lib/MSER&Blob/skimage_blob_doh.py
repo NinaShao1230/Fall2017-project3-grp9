@@ -13,7 +13,7 @@ reference:
 http://scikit-image.org/docs/dev/auto_examples/features_detection/plot_blob.html
 '''
 from skimage.feature import blob_doh
-import matplotlib.pyplot as plt
+
 from skimage.color import rgb2gray
 from os import listdir
 import cv2
@@ -34,9 +34,24 @@ for i in range(len(img_names)):
     for x in blobs_doh:
         x.append(i+1)
     blob_df.extend(blobs_doh)
+    
+blob_DF=pd.DataFrame(np.array(blob_df))
+blob_DF.columns=("X","Y","radius","image")
+blob_DF.to_csv("/Users/luoxin/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/blob_df.csv",index=False)
+'''
+make k-means classification
+'''
+from sklearn.cluster import KMeans
+kmeans=KMeans(n_clusters=200).fit(blob_df[["X","Y",'radius']])
+blob_df['label']=kmeans.labels_
 
-blob_df.to_csv("/Users/luoxin/Desktop/blob_df.csv")
-#plot part    
+
+blob_df.to_csv("/Users/luoxin/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/blob_df.csv",index=False)
+
+
+
+#plot part 
+#import matplotlib.pyplot as plt   
 #fig, ax = plt.subplots()  
 #ax.imshow(image, interpolation='nearest')
 #color="red"
