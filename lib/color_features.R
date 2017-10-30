@@ -3,6 +3,7 @@ library("EBImage")
 
 
 setwd("~/Desktop/training_set/")
+img_names<-list.files("./images/")
 
 Rbin<-seq(0,1,length.out =  10) 
 Gbin<-seq(0,1,length.out = 10)
@@ -21,7 +22,7 @@ rgb_features$Image<-img_names
 hsv_features<-data.frame(matrix(NA,3000,1001))
 colnames(hsv_features)<-c('Image',paste('hsv_',1:1000,sep=""))
 hsv_features$Image<-img_names
-img_names<-list.files("./images/")
+
 
 for(i in 1:3000){
   print(i)
@@ -49,4 +50,4 @@ for(i in 1:3000){
 }
 
 color_features<-merge(rgb_features,hsv_features,by.x = "Image",by.y="Image")
-write.csv(color_features,"~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/color_features.csv")
+write.csv(color_features,"~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/color_features.csv",row.names = F)
