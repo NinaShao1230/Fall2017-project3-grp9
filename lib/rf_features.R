@@ -34,8 +34,8 @@ train_RF = function(feature_filename, labels_filename){
   cat("Training time for Random Forest with 500 trees is ", train_time, " seconds \n")
   err_rate = img_rf$err.rate[500, "OOB"]
   cat("Validation Error rate for Random Forest with 500 trees is", err_rate, "\n")
-  # filename = "../output/RFFeature.RData"
-  write.csv(img_rf, file = "../rf_features.csv")
+
+  save(img_rf, file = "../rf_features.RData")
   return(img_rf)
 }
 
@@ -50,7 +50,7 @@ test_RF = function(rf_object, features_filename)
   rf_predict = as.vector(predict(rf_object, img_features, type = "prob"))
   test_time = (proc.time() - t)[3]
   cat("Prediction time for Random Forest with 500 trees is ", test_time, " seconds \n")
-  # filename = "../output/RFPredict.csv"
-  write.csv(rf_predict, file = "../output/rf_predict.csv")
+
+  write.csv(rf_predict, file = "../rf_predict.csv")
   return(rf_predict)
 }
