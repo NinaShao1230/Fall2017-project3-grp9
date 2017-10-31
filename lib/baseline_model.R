@@ -13,6 +13,7 @@ features_sift_color_orb<-cbind(features,color[,-1],orb[,-1])
 
 set.seed(190)
 train_index<-sample(1:3000,floor(nrow(img_labels)*0.75))
+
 train_labels<-img_labels[train_index,2]
 test_labels<-img_labels[-train_index,2]
 
@@ -77,6 +78,6 @@ base_fit_predict3<-ifelse(base_fit_predict3>mean(base_fit_predict3),1,0)
 result3<-mean(base_fit_predict3!=test_labels)
 #0.116
 
-save(base_fit,base_fit2,base_fit3,file="~/Desktop/baseline_models.RDate")
+save(train_index,base_fit,base_fit2,base_fit3,file="~/Desktop/baseline_models.RDate")
 
 

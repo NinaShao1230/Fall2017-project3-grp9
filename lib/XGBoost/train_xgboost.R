@@ -17,7 +17,7 @@ features_sift_color_orb<-cbind(features,color[,-1],orb[,-1])
 ##############  select params ##################### 
 
 ##### making train n test data ####
-set.seed(1)
+set.seed(90)
 train_index<-sample(1:3000,2500)
 
 train_data<-features_sift_color[train_index,]
@@ -117,7 +117,7 @@ train_xgb<-function(data_train,depth,e){
 }
 
 ####### making train/test data #####
-set.seed(190)
+set.seed(90)
 train_index<-sample(1:3000,floor(nrow(img_labels)*0.75))
 
 train_data<-features_sift_color_orb[train_index,]
@@ -136,7 +136,8 @@ temp1<-train_xgb(train.D,2,.09)
 temp1$err
 temp1$time
 temp1$iter
-save(temp1,file="~/Desktop/xgb_2_09.RData")
+xgb_2_09<-temp1
+save(xgb_2_09,train_index,file="~/Desktop/xgb_2_09.RData")
 
 ############# Second (worse)
 temp2<-train_xgb(train.D,8,.07)
