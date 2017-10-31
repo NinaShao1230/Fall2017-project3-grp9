@@ -35,30 +35,29 @@ watchlist <- list(train_mat=train.D)
 param_df<-data.frame(matrix(NA,0,3))
 colnames(param_df)<-c("depth","eta","error")
 i=0
-for(depth in 2:8){
-  for(e in seq(0.04,0.1,0.02)){
+
+for(depth in 6:8){
+  for(e in seq(0.1,1,0.3)){
     i=i+1
-    parameters <- list (objective        = "multi:softmax",
-                        num_class            = 3,
-                         booser              = "gbtree",
-                         eta                 = e,
-                         max_depth           = depth,
-                         subsample           = 0.5,
-                         gamma = 0
+    parameters <- list(objective = "multi:softmax",
+                       num_class           =3,
+                        max_depth = depth,
+                        eta = e,
+                        gamma = runif(1, 0.0, 0.2) 
     )
     
     crossvalid <- xgb.cv( params             = parameters,
                           nthread             = 6,  
                           data                = train.D,
-                          nrounds             = 50,
+                          nrounds             = 500,
                           verbose             = 1,
                           watchlist           = watchlist,
                           maximize            = F,
                           nfold               = 5,
-                          early_stopping_rounds    = 15,
+                          early_stopping_rounds    = 8,
                           print_every_n       = 1
     )
-    
+    crossvalid$best_iteration
     train.model <- xgb.train( params              = parameters,
                               data                = train.D,
                               nrounds             = crossvalid$best_iteration, 
@@ -70,7 +69,7 @@ for(depth in 2:8){
     test_mat <- data.matrix(test_data,rownames.force = NA)
     result <- predict (train.model,test_mat)
     
-    result<-as.numeric(result > 0.5)
+    #result<-as.numeric(result > 0.5)
     mean(result!=test_labels)
     param_df<-rbind(param_df,c(depth,e,mean(result!=test_labels)))
     
@@ -96,7 +95,7 @@ train_xgb<-function(data_train,depth,e){
                         watchlist           = watchlist,
                         maximize            = F,
                         nfold               = 5,
-                        early_stopping_rounds    = 15,
+                        early_stopping_rounds    = 5,
                         print_every_n       = 1
   )
   
@@ -113,7 +112,7 @@ train_xgb<-function(data_train,depth,e){
   testmodel <- data.matrix(test_data,rownames.force = NA)
   result <- predict (train_model,testmodel)
   
-  result<-as.numeric(result > 0.5)
+  #result<-as.numeric(result > 0.5)
   err<-mean(result!=test_labels)
   
   return(list(err=err,model=train_model,iter=crossvalid$best_iteration,time=tm))
@@ -135,7 +134,7 @@ watchlist <- list(train_mat=train.D)
 
 
 ############# First
-temp1<-train_xgb(train.D,2,.09)
+temp1<-train_xgb(train.D,8,.5)
 temp1$err
 temp1$time
 temp1$iter

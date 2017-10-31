@@ -26,10 +26,15 @@ if(!require("RandomForest")){
   install.packages("RandomForest")
 }
 
+if(!require("adabag")){
+  install.packages("adabag")
+}
+
 library("EBImage")
 library("gbm")
 library("xgboost")
 library("RandomForest")
+library("adabag")
 
 ```
 
@@ -93,18 +98,12 @@ source("../lib/feature.R")
 
 tm_feature_train <- NA
 if(run.feature.train){
-  tm_feature_train <- system.time(dat_train <- feature(img_train_dir, 
-                                                       "train", 
-                                                       data_name="zip", 
-                                                       export=TRUE))
+  tm_feature_train <- system.time(dat_train <- feature(img_train_dir))
 }
 
 tm_feature_test <- NA
 if(run.feature.test){
-  tm_feature_test <- system.time(dat_test <- feature(img_test_dir, 
-                                                     "test", 
-                                                     data_name="zip", 
-                                                     export=TRUE))
+  tm_feature_test <- system.time(dat_test <- feature(img_test_dir))
 }
 
 #save(dat_train, file="./output/feature_train.RData")

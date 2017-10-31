@@ -8,8 +8,10 @@ features<-read.csv("~/Desktop/training_set/sift_train.csv")
 color<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/color_features.csv",as.is = F)
 orb<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/orb_df_tidyver.csv",as.is = F)
 
+lbp<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/lbp_feature.csv",as.is = F)
 features_sift_color<-cbind(features,color[,-1])
 features_sift_color_orb<-cbind(features,color[,-1],orb[,-1])
+features_sift_color_lbp<-cbind(features,color[,-1],lbp[,-1])
 
 set.seed(90)
 train_index<-sample(1:3000,floor(nrow(img_labels)*0.75))
@@ -44,6 +46,25 @@ train_data$labels<-as.factor(train_labels)
 
 ######## function from adabag package #########
 
+######## ntree=50
+library("adabag")
+begin=Sys.time()
+adabag_fit=boosting(labels~.,train_data[,-1],mfinal=70,coeflearn="Zhu")
+end=Sys.time()
+end-begin
+#1.312945 hours
+
+pred_begin=Sys.time()
+pred_adabag=predict.boosting(adabag_fit,newdata = test_data[,-1])
+pred_end=Sys.time()
+pred_end-pred_begin
+#4.625609 mins
+mean((as.integer(pred_adabag$class))!=test_labels)
+#0.0866
+save(adabag_fit,train_index,file="~/Desktop/adabag_model_3c.RData")
+
+
+######## ntree=50
 library("adabag")
 begin=Sys.time()
 adabag_fit=boosting(labels~.,train_data[,-1],mfinal=50,coeflearn="Zhu")
@@ -55,25 +76,64 @@ pred_begin=Sys.time()
 pred_adabag=predict.boosting(adabag_fit,newdata = test_data[,-1])
 pred_end=Sys.time()
 pred_end-pred_begin
-##4.625609 mins
+#4.625609 mins
 mean((as.integer(pred_adabag$class))!=test_labels)
-
+#0.0866
 save(adabag_fit,train_index,file="~/Desktop/adabag_model_3c.RData")
-e
 
-### reduce ntree
 
+############ reduced ntree=20
 begin=Sys.time()
 adabag_fit20=boosting(labels~.,train_data[,-1],mfinal=20,coeflearn="Zhu")
 end=Sys.time()
 end-begin
-#1.312945 hours
+#30.51974 mins
 
 pred_begin=Sys.time()
 pred_adabag20=predict.boosting(adabag_fit20,newdata = test_data[,-1])
 pred_end=Sys.time()
 pred_end-pred_begin
 ##4.625609 mins
-mean((as.integer(pred_adabag$class))!=test_labels)
+mean((as.integer(pred_adabag20$class))!=test_labels)
+##0.113
+save(adabag_fit20,train_index,file="~/Desktop/adabag_model_20.RData")
 
+
+############### reduced ntree=30
+begin=Sys.time()
+adabag_fit30=boosting(labels~.,train_data[,-1],mfinal=30,coeflearn="Zhu")
+end=Sys.time()
+end-begin
+#1.046846 hours
+
+pred_begin=Sys.time()
+pred_adabag30=predict.boosting(adabag_fit30,newdata = test_data[,-1])
+pred_end=Sys.time()
+pred_end-pred_begin
+##11.03435 mins
+mean((as.integer(pred_adabag30$class))!=test_labels)
+##0.108
+save(adabag_fit30,train_index,file="~/Desktop/adabag_model_30.RData")
+
+
+############## +lbp data 25 trees
+train_data<-features_sift_color_lbp[train_index,]
+train_data$labels<-as.factor(train_labels)
+test_data<-features_sift_color_lbp[-train_index,]
+
+begin=Sys.time()
+adabag_fit25=boosting(labels~.,train_data[,-1],mfinal=25,coeflearn="Zhu")
+end=Sys.time()
+end-begin
+#37.89609 mins
+
+pred_begin=Sys.time()
+pred_adabag25=predict.boosting(adabag_fit20,newdata = test_data[,-1])
+pred_end=Sys.time()
+pred_end-pred_begin
+##2.182377 mins
+mean((as.integer(pred_adabag25$class))!=test_labels)
+##0.108
+
+save(adabag_fit25,train_index,file="~/Desktop/adabag_model_25.RData")
 
