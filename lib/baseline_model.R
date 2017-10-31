@@ -42,12 +42,12 @@ test_data<-features[-train_index,]
 begin<-Sys.time()
 base_fit<-train(train_data[,-1],train_labels)
 Sys.time()-begin
-#15.79 mins
+#35.57 mins
 
 base_fit_predict<-predict(base_fit,test_data[,-1],n.trees = 2000)
 base_fit_predict<-ifelse(base_fit_predict>mean(base_fit_predict),1,0)
 result<-mean(base_fit_predict!=test_labels)
-#0.29
+#0.21
 
 
 ################ base on sift n color #####################

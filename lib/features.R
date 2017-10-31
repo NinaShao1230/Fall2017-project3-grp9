@@ -1,6 +1,6 @@
   library("EBImage")
 
-  feature<-function(img_dir){
+  features<-function(img_dir){
     #setwd("~/Desktop/training_set/")
     img_names<-list.files(img_dir)
 
@@ -13,11 +13,11 @@
     Vbin<-seq(0,0.005,length.out = 10)
 
 
-    ##RGB features
+    ## RGB features
     rgb_features<-data.frame(matrix(NA,3000,1001))
     colnames(rgb_features)<-c('Image',paste('rbg_',1:1000,sep=""))
     rgb_features$Image<-img_names
-
+    ## HSV features
     hsv_features<-data.frame(matrix(NA,3000,1001))
     colnames(hsv_features)<-c('Image',paste('hsv_',1:1000,sep=""))
     hsv_features$Image<-img_names
