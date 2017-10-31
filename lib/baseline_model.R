@@ -77,6 +77,6 @@ base_fit_predict3<-ifelse(base_fit_predict3>mean(base_fit_predict3),1,0)
 result3<-mean(base_fit_predict3!=test_labels)
 #0.116
 
-save(base_fit,base_fit2,base_fit3,"Desktop/baseline_models.RDate")
+save(base_fit,base_fit2,base_fit3,file="~/Desktop/baseline_models.RDate")
 
 
