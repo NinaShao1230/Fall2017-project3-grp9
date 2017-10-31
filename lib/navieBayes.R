@@ -1,8 +1,8 @@
 library(caret)
 library(e1071)
-
+library(klaR)
 X.train <- read.csv('/Users/ninashao/Desktop/Fall2017-project3-fall2017-project3-grp9-master 2/data/training_set/sift_train.csv', header = T)
-dim(X.train)
+# dim(X.train)
 X.train<-X.train[,-1]
 y.train <- unlist(read.csv('/Users/ninashao/Desktop/Fall2017-project3-fall2017-project3-grp9-master 2/data/training_set/label_train.csv', header = T)[,2])
 x_cols<-nearZeroVar(X.train, names = TRUE, freqCut = 2, uniqueCut = 20)
@@ -21,11 +21,8 @@ train_data <- data_train[index,]
 test_data <- data_train[-index,]
 train_label <- matrix(y.train[index])
 test_label <- matrix(y.train[-index])
+model_temp<-train(train_data, as.factor(train_label), method="naive_bayes",trControl=trainControl(method='cv',number=10))
 
-classifier<-naiveBayes(train_data,train_label)
-pred_test<-predict(classifier, test_data,type = "raw" )
-pred_label<-colnames(pred_test)[apply(pred_test,1,which.max)]
-pred_label<-as.numeric(pred_label)
-test_error<-sum(pred_label != test_label)/nrow(test_data)
+pred_test<-predict(model_temp, test_data,type = "raw" )
+test_error<-sum(pred_test != test_label)/nrow(test_data)
 test_error
-
