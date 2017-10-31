@@ -37,7 +37,7 @@ pred_end-pred_begin
 
 mean((as.integer(ada_predict)-1)!=test_labels)#0.09
 
-save(ada.fit,train_index,file="~/Desktop/adaboost_model.RData")
+save(ada.fit,train_index,file="~/Desktop/ada_model.RData")
 
 
 ######## function from adabag package #########
