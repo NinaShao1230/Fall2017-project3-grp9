@@ -13,6 +13,7 @@ gray<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-
 features_sift_color<-cbind(features,color[,-1])
 features_sift_color_orb<-cbind(features,color[,-1],orb[,-1])
 features_sift_color_lbp<-cbind(features,color[,-1],lbp[,-1])
+features_sift_color_lbp_gray<-cbind(features,color[,-1],lbp[,-1],gray[,-1])
 
 set.seed(90)
 train_index<-sample(1:3000,floor(nrow(img_labels)*0.75))
@@ -89,23 +90,23 @@ base_fit4<-train(train_data[,-1],train_labels)
 Sys.time()-begin
 
 base_fit_predict4<-predict(base_fit4,test_data[,-1],n.trees = 2000)
-base_fit_predict<-apply(base_fit_predict[,,1],1,which.max)-1
-result4<-mean(base_fit_predict3!=test_labels)
+base_fit_predict<-apply(base_fit_predict4[,,1],1,which.max)-1
+result4<-mean(base_fit_predict4!=test_labels)
 
 
 
 ################ base on sift n color n lbp n gray #####################
-train_data<-features_sift_color_lbp[train_index,]
-test_data<-features_sift_color_lbp[-train_index,]
+train_data<-features_sift_color_lbp_gray[train_index,]
+test_data<-features_sift_color_lbp_gray[-train_index,]
 
 begin<-Sys.time()
-base_fit4<-train(train_data[,-1],train_labels)
+base_fit5<-train(train_data[,-1],train_labels)
 Sys.time()-begin
 
-base_fit_predict4<-predict(base_fit4,test_data[,-1],n.trees = 2000)
-base_fit_predict<-apply(base_fit_predict[,,1],1,which.max)-1
-result4<-mean(base_fit_predict3!=test_labels)
+base_fit_predict5<-predict(base_fit5,test_data[,-1],n.trees = 2000)
+base_fit_predict6<-apply(base_fit_predict5[,,1],1,which.max)-1
+result4<-mean(base_fit_predict6!=test_labels)
 
 
-save(train_index,base_fit,base_fit2,base_fit3,file="~/Desktop/basefit4.RDate")
+save(train_index,base_fit5,file="~/Desktop/basefit5.RDate")
 
