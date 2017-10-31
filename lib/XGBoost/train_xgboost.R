@@ -4,7 +4,7 @@ library("xgboost")
 
 img_labels<-read.csv("~/Desktop/training_set/label_train.csv")
 colnames(img_labels)=c("Image","labels")
-img_labels[,2]<-ifelse(img_labels[,2]==2,1,0)
+#img_labels[,2]<-ifelse(img_labels[,2]==2,1,0)
 
 features<-read.csv("~/Desktop/training_set/sift_train.csv")
 color<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/color_features.csv",as.is = F)
@@ -35,20 +35,22 @@ watchlist <- list(train_mat=train.D)
 param_df<-data.frame(matrix(NA,0,3))
 colnames(param_df)<-c("depth","eta","error")
 i=0
-for(depth in 2:10){
+for(depth in 2:8){
   for(e in seq(0.04,0.1,0.02)){
     i=i+1
-    parameters <- list ( objective        = "binary:logistic",
+    parameters <- list (objective        = "multi:softmax",
+                        num_class            = 3,
                          booser              = "gbtree",
-                         eta                 = 0.05,
-                         max_depth           = 6,
+                         eta                 = e,
+                         max_depth           = depth,
                          subsample           = 0.5,
                          gamma = 0
     )
     
     crossvalid <- xgb.cv( params             = parameters,
+                          nthread             = 6,  
                           data                = train.D,
-                          nrounds             = 500,
+                          nrounds             = 50,
                           verbose             = 1,
                           watchlist           = watchlist,
                           maximize            = F,
@@ -78,7 +80,8 @@ for(depth in 2:10){
 ##############  select models ##################### 
 train_xgb<-function(data_train,depth,e){
   
-  parameters <- list ( objective        = "binary:logistic",
+  parameters <- list ( objective        = "multi:softmax",
+                       num_class           =3,
                        booser              = "gbtree",
                        eta                 = e,
                        max_depth           = depth,
