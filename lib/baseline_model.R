@@ -4,16 +4,16 @@ img_labels<-read.csv("~/Desktop/training_set/label_train.csv")
 colnames(img_labels)=c("Image","labels")
 #img_labels[,2]<-ifelse(img_labels[,2]==2,1,0)
 
-features<-read.csv("~/Desktop/training_set/sift_train.csv")
+features_sift<-read.csv("~/Desktop/training_set/sift_train.csv")
 color<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/color_features.csv",as.is = F)
 orb<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/orb_df_tidyver.csv",as.is = F)
 lbp<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/lbp_feature.csv",as.is = F)
-gray<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/gray_features.csv",as.is = F)
+gray<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/gray_features.csv",as.is = F)[,-1]
 
-features_sift_color<-cbind(features,color[,-1])
-features_sift_color_orb<-cbind(features,color[,-1],orb[,-1])
-features_sift_color_lbp<-cbind(features,color[,-1],lbp[,-1])
-features_sift_color_lbp_gray<-cbind(features,color[,-1],lbp[,-1],gray[,-1])
+features_sift_color<-cbind(features_sift,color[,-1])
+features_sift_color_orb<-cbind(features_sift,color[,-1],orb[,-1])
+features_sift_color_lbp<-cbind(features_sift,color[,-1],lbp[,-1])
+features_sift_color_lbp_gray<-cbind(features_sift,color[,-1],lbp[,-1],gray[,-1])
 
 set.seed(90)
 train_index<-sample(1:3000,floor(nrow(img_labels)*0.75))

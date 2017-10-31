@@ -1,7 +1,11 @@
+#############################################################
+### Construct visual features for training/testing images ###
+#############################################################
+
   library("EBImage")
 
   features<-function(img_dir){
-    #setwd("~/Desktop/training_set/")
+    
     img_names<-list.files(img_dir)
 
     Rbin<-seq(0,1,length.out =  10) 
@@ -22,10 +26,10 @@
     colnames(hsv_features)<-c('Image',paste('hsv_',1:1000,sep=""))
     hsv_features$Image<-img_names
 
-    #gray features
-    Gbin<-seq(0,1,length.out =  250) 
-    gray_features<-data.frame(matrix(NA,3000,251))
-    colnames(gray_features)<-c('Image',paste('gray_',1:250,sep=""))
+    # #gray features
+    # Gbin<-seq(0,1,length.out =  250) 
+    # gray_features<-data.frame(matrix(NA,3000,251))
+    # colnames(gray_features)<-c('Image',paste('gray_',1:250,sep=""))
 
     for(i in 1:3000){
       print(i)
@@ -56,17 +60,15 @@
       img_mat_gray<-imageData(img_gray)
 
       ##grey
-      freq_gray <- as.data.frame(table(factor(findInterval(img_mat_gray, Gbin), levels = 1:250)))
-      gray_features[i,2:251] <- as.numeric(freq_gray$Freq)/(ncol(img_mat_gray)*nrow(img_mat_gray))
+      # freq_gray <- as.data.frame(table(factor(findInterval(img_mat_gray, Gbin), levels = 1:250)))
+      # gray_features[i,2:251] <- as.numeric(freq_gray$Freq)/(ncol(img_mat_gray)*nrow(img_mat_gray))
     }
 
     color_features<-merge(rgb_features,hsv_features,by.x = "Image",by.y="Image")
-    #color_features<-merge(color_features,gray_features,by.x = "Image",by.y="Image")
-    save(color_features,"~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/color_features.csv")
-    save(gray_features,"~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/gray_features.csv")
+    
     sift_features<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/training_set/sift_train.csv")
-    features_sift_color<-cbind(sift_features,color_features[,-1])
-    save(features_sift_color,"~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/new_features.csv")
+    features_sift_color_grey<-cbind(sift_features,color_features[,-1])
+    save(features_sift_color,file="~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/new_features.RData")
 
     return(features_sift_color)
   }
