@@ -47,8 +47,8 @@ setwd("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-
 ```
 
 ```{r}
-img_train_dir <- "./data/training_set/images"
-img_test_dir <- "./data/"#going to be changed when testing
+img_train_dir <- paste(getwd(),"/data/training_set/images/",sep="")
+img_test_dir <- "../data/"#going to be changed when testing
 ```
 
 ### Step 1: set up controls for evaluation experiments.
@@ -82,9 +82,7 @@ model_labels = paste("GBM with depth =", model_values)
 For the example of zip code digits, we code digit 9 as "1" and digit 7 as "0" for binary classification.
 
 ```{r train_label}
-label_train <- read.table(paste(experiment_dir, "train_label.txt", sep=""),
-                          header=F)
-label_train <- as.numeric(unlist(label_train) == "9")
+label_train <- read.csv("./data/training_set/label_train.csv")
 ```
 
 ### Step 3: construct visual feature
@@ -94,16 +92,16 @@ For this simple example, we use the row averages of raw pixel values as the visu
 `feature.R` should be the wrapper for all your feature engineering functions and options. The function `feature( )` should have options that correspond to different scenarios for your project and produces an R object that contains features that are required by all the models you are going to evaluate later. 
 
 ```{r feature}
-source("../lib/feature.R")
-
+source("../lib/features.R")
+load()
 tm_feature_train <- NA
 if(run.feature.train){
-  tm_feature_train <- system.time(dat_train <- feature(img_train_dir))
+  tm_feature_train <- system.time(dat_train <- features(img_train_dir))
 }
 
 tm_feature_test <- NA
 if(run.feature.test){
-  tm_feature_test <- system.time(dat_test <- feature(img_test_dir))
+  tm_feature_test <- system.time(dat_test <- features(img_test_dir))
 }
 
 #save(dat_train, file="./output/feature_train.RData")
