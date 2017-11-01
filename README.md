@@ -20,7 +20,7 @@ Term: Fall 2017
 	+ Advanced model: Adaboost model with all SIFT, color, LBP and gray features. Test Error: 0.085, training time: 26 mins. 
 
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement.
-+ Xin Luo	
++ Xin Luo: Construct the main/train/test/features files, extract color/gray/blob/mser features, train/test baseline, Xgboost and Adaboost models
 + Xinghu Wang: Extract HOG features, train/test Random Forest Model, prepare presentation and presentor 
 + Sihui Shao: Extract LBP & ORB features, train/test Naive Bayes, SVM and Multi-layer perceptron Model
 + Yiwei Na: 
@@ -29,11 +29,11 @@ Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by
 
 ```
 proj/
-├── lib/
-├── data/
-├── doc/
-├── figs/
-└── output/
+????????? lib/
+????????? data/
+????????? doc/
+????????? figs/
+????????? output/
 ```
 
 Please see each subfolder for a README file.
