@@ -20,12 +20,13 @@ set.seed(90)
 train_index<-sample(1:3000,floor(nrow(img_labels)*0.75))
 
 train_data<-features_sift_color_lbp_gray[train_index,]
+train_data$labels<-as.factor(train_labels)
 test_data<-features_sift_color_lbp_gray[-train_index,]
 
 train_labels<-img_labels[train_index,2]
 test_labels<-img_labels[-train_index,2]
 
-train_data$labels<-as.factor(train_labels)
+
 
 ######## function from ada package #########
 
@@ -117,15 +118,15 @@ begin=Sys.time()
 adabag_fit30=boosting(labels~.,train_data[,-1],mfinal=30,coeflearn="Zhu")
 end=Sys.time()
 end-begin
-#1.046846 hours
+#26.36 mins
 
 pred_begin=Sys.time()
 pred_adabag30=predict.boosting(adabag_fit30,newdata = test_data[,-1])
 pred_end=Sys.time()
 pred_end-pred_begin
-##11.03435 mins
+##2.79 mins
 mean((as.integer(pred_adabag30$class))!=test_labels)
-##0.108
+##0.085
 save(adabag_fit30,train_index,file="~/Desktop/adabag_model_30.RData")
 
 

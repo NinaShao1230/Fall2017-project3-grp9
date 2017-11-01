@@ -20,7 +20,7 @@
 
 
     ## RGB features
-    rgb_features<-data.frame(matrix(0,3000,1001))
+    rgb_features<-data.frame(matrix(NA,3000,1001))
     colnames(rgb_features)<-c('Image',paste('rbg_',1:1000,sep=""))
     rgb_features$Image<-img_names
     ## HSV features
@@ -36,10 +36,15 @@
     for(i in 1:3000){
       print(i)
       img<-readImage(paste(img_dir,img_names[i],sep=""))
+      img<-resize(img,256,256)
       if(length(dim(img))!=3){
+        img_gray<-channel(img,"gray")
+        img_mat_gray<-imageData(img_gray)
+        freq_gray <- as.data.frame(table(factor(findInterval(img_mat_gray, Gbin), levels = 1:250)))
+        gray_features[i,2:251] <- as.numeric(freq_gray$Freq)/(ncol(img_mat_gray)*nrow(img_mat_gray))
         next
       }
-      img<-resize(img,256,256)
+      #img<-resize(img,256,256)
       img_mat<-imageData(img)
       
       ### RGB
@@ -61,8 +66,6 @@
       img_gray<-channel(img,"gray")
       #img<-resize(img,256,256)
       img_mat_gray<-imageData(img_gray)
-
-     
       freq_gray <- as.data.frame(table(factor(findInterval(img_mat_gray, Gbin), levels = 1:250)))
       gray_features[i,2:251] <- as.numeric(freq_gray$Freq)/(ncol(img_mat_gray)*nrow(img_mat_gray))
     }
@@ -75,6 +78,9 @@
     ####### construct in python first ##########
     ############################################
     lbp_features<-read.csv(paste("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/training_set/lbp_",type,".csv",sep = ""))
+    
+    write.csv(features_sift_color_lbp,"~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/output/train_features_sift_color_lbp.csv")
+    write.csv(features_sift_color_lbp_gray,"~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/output/train_features_sift_color_lbp_gray.csv")
     
     features_sift_color_lbp<-cbind(sift_features,color_features[,-1],lbp_features[,-1])
     features_sift_color_lbp_gray<-cbind(sift_features,color_features[,-1],lbp_features[,-1],gray_features)
