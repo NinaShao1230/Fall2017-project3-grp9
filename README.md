@@ -15,7 +15,7 @@ Term: Fall 2017
 
 
 + Project summary: In this project, we created a classification engine for images of dogs versus fried chicken versus blueberry muffins. 
-	+ This project includes three stages, features extractions, model selections and prediction. In the feature extractions, we tried to extract SIFT, color features, LBP, gray, HOG and ORB features. For model selections, we tried Xgboost, GBM, adaboost, random forest, naive bayes, SVM (linear & kernel), and convolutional neutral network(CNN). 
+	+ This project includes three stages, features extractions, model selections and prediction. In the feature extractions, we tried to extract color features, LBP, gray, HOG and ORB features. For 3,000 images, every feture extraction method spends 10-15 mins.For model selections, we tried Xgboost, GBM, adaboost, random forest, naive bayes, SVM (linear & kernel), and convolutional neutral network(CNN). 
 	+ Baseline model: GBM model with all SIFT features. Test Error: 0.21, training time: 35 mins.
 	+ Advanced model: Adaboost model with all SIFT, color, LBP and gray features. Test Error: 0.085, training time: 26 mins. 
 
