@@ -94,7 +94,7 @@ if(!new.features){
     tm_feature_train <- system.time(dat_train<- features(img_train_dir,"train"))
     save(dat_train, file="./output/feature_train.RData")
   }else{
-    source("./output/feature_train.RData")
+    load("./output/feature_train.RData")
   }
 }
 
