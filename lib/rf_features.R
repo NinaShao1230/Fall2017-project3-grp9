@@ -27,33 +27,11 @@ train_labels <- as.factor(features3[index,1])
 test_features <- features3[-index,-1]
 test_labels <- as.factor(features3[-index,1])
 
-### CV ###
-K = 5
-m <- length(train_labels)
-m.fold <- floor(m/K)
-s <- sample(rep(1:K, c(rep(m.fold, K-1), m-(K-1)*m.fold))) 
-cv.error <- rep(NA, K)
 
-for (i in 1:K){
-  train.data <- train_features[s != i,]
-  train.label <- train_labels[s != i]
-  test.data <- train_features[s == i,]
-  test.label <- train_labels[s == i]
-  
-  fit <- tuneRF(train.data, as.factor(train.label), ntree = 100, doBest = T)
-  pred <- predict(fit, test.data)
-  cv.error[i] <- mean(pred != test.label)
-}
-
-# Visualize CV
-# ggplot(data = data.frame(cv.error)) + geom_point(aes(x = 1:10, y = cv.error))
-
-error <- mean(cv.error)
-
-system.time(rf.train3 <- tuneRF(train_features[s != best,], as.factor(train_labels[s != best]), ntreeTry = 100, doBest = T))
+system.time(rf.tree3 <- tuneRF(train_features, as.factor(train_labels), ntreeTry = 100, doBest = T))
 #1116.943 sec
 
-#system.time(rf.tree3 <- randomForest(x=train_features[s != best,], y=as.factor(train_labels[s != best]), mtry = 70, ntree = 100)) 
+#system.time(rf.tree3 <- randomForest(x=train_features, y=as.factor(train_labels), mtry = 70, ntree = 100)) 
 # 141.961 sec
 
 
