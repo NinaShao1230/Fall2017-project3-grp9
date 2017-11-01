@@ -43,7 +43,7 @@ def extract_lbp(img_dir,type='train'):
         print(i)
     
     lbp_df=pd.DataFrame(his)
-    lbp_df.to_csv("./lbp_"+type+".csv")
+    lbp_df.to_csv("./lbp_"+type+".csv",index=False)
     #return(lbp_df)
 
 #print("done")  
