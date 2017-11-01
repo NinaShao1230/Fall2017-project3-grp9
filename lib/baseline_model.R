@@ -1,5 +1,5 @@
 library("gbm")
-setwd('C:/Users/xl2614/Desktop/Fall2017-project3-fall2017-project3-grp9-master/')
+setwd('~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/')
 img_labels<-read.csv("./data/training_set/label_train.csv")
 colnames(img_labels)=c("Image","labels")
 #img_labels[,2]<-ifelse(img_labels[,2]==2,1,0)
@@ -35,7 +35,8 @@ train <- function(dat_train, label_train, par=NULL){
                      interaction.depth=depth, 
                      bag.fraction = 0.5,
                      verbose=FALSE)
-  return(fit_gbm)
+  best_iter <- gbm.perf(boost.fit, method="cv", cv.folds>1,plot.it = FALSE)
+  return(fit=list(fit_gbm,best_iter))
 }
 
 
@@ -68,19 +69,6 @@ base_fit_predict2<-ifelse(base_fit_predict2>mean(base_fit_predict2),1,0)
 result2<-mean(base_fit_predict_222!=test_labels)
 #0.105
 
-
-################ base on sift n color n orb #####################
-train_data<-features_sift_color_orb[train_index,]
-test_data<-features_sift_color_orb[-train_index,]
-
-begin<-Sys.time()
-base_fit3<-train(train_data[,-1],train_labels)
-Sys.time()-begin
-
-base_fit_predict3<-predict(base_fit3,test_data[,-1],n.trees = 2000)
-base_fit_predict3<-ifelse(base_fit_predict3>mean(base_fit_predict3),1,0)
-result3<-mean(base_fit_predict3!=test_labels)
-
 ################ base on sift n color n lbp #####################
 train_data<-features_sift_color_lbp[train_index,]
 test_data<-features_sift_color_lbp[-train_index,]
@@ -88,25 +76,25 @@ test_data<-features_sift_color_lbp[-train_index,]
 begin<-Sys.time()
 base_fit4<-train(train_data[,-1],train_labels)
 Sys.time()-begin
-
+#44.66 mins
 base_fit_predict4<-predict(base_fit4,test_data[,-1],n.trees = 2000)
 base_fit_predict4<-apply(base_fit_predict4[,,1],1,which.max)-1
 result4<-mean(base_fit_predict4!=test_labels)
-
+#0.104
 
 
 ################ base on sift n color n lbp n gray #####################
-train_data<-features_sift_color_lbp[train_index,]
-test_data<-features_sift_color_lbp[-train_index,]
+train_data<-features_sift_color_lbp_gray[train_index,]
+test_data<-features_sift_color_lbp_gray[-train_index,]
 
 begin<-Sys.time()
 base_fit4<-train(train_data[,-1],train_labels)
 Sys.time()-begin
-#44.66938 mins
+#51 mins
 base_fit_predict4<-predict(base_fit4,test_data[,-1],n.trees = 2000)
 base_fit_predict<-apply(base_fit_predict[,,1],1,which.max)-1
 result4<-mean(base_fit_predict3!=test_labels)
-#0.104
+#0.105
 base_fit_sift_color_lbp<-base_fit4
 save(base_fit_sift_color_lbp,train_labels,file = "data/base_fit_sift_color_lbp.RData")
 

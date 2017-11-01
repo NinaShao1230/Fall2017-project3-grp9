@@ -6,7 +6,7 @@
   library("rPython")
  
   
-  features<-function(img_dir){
+  features<-function(img_dir,type="train"){
     
     img_names<-list.files(img_dir)
 
@@ -20,7 +20,7 @@
 
 
     ## RGB features
-    rgb_features<-data.frame(matrix(NA,3000,1001))
+    rgb_features<-data.frame(matrix(0,3000,1001))
     colnames(rgb_features)<-c('Image',paste('rbg_',1:1000,sep=""))
     rgb_features$Image<-img_names
     ## HSV features
@@ -70,8 +70,15 @@
     color_features<-merge(rgb_features,hsv_features,by.x = "Image",by.y="Image")
     
     sift_features<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/training_set/sift_train.csv")
-    features_sift_color_grey<-cbind(sift_features,color_features[,-1])
-    save(features_sift_color,gray_features,file="~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/R_features.RData")
-    return(features_sift_color)
+    
+    ############################################
+    ####### construct in python first ##########
+    ############################################
+    lbp_features<-read.csv(paste("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/training_set/lbp_",type,".csv",sep = ""))
+    
+    features_sift_color_lbp<-cbind(sift_features,color_features[,-1],lbp_features[,-1])
+    features_sift_color_lbp_gray<-cbind(sift_features,color_features[,-1],lbp_features[,-1],gray_features)
+    save(features_sift_color_lbp,features_sift_color_lbp_gray,file=paste(img_dir,"/all_features.RData",sep = ""))
+    return(list(Nogray=features_sift_color_lbp,Gray=features_sift_color_lbp_gray))
   }
 

@@ -1,5 +1,5 @@
 
-setwd('C:/Users/xl2614/Desktop/Fall2017-project3-fall2017-project3-grp9-master/')
+setwd('~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/')
 img_labels<-read.csv("./data/training_set/label_train.csv")
 colnames(img_labels)=c("Image","labels")
 #img_labels[,2]<-ifelse(img_labels[,2]==2,1,0)
@@ -52,14 +52,18 @@ train_data$labels<-as.factor(train_labels)
 
 
 
+######## ntree=90 with gray
+#err0.0667
+#time=50.95
+
 ######## ntree=70
 library("adabag")
 begin=Sys.time()
-adabag_fit=boosting(labels~.,train_data[,-1],mfinal=90,coeflearn="Zhu")
+adabag_fit=boosting(labels~.,train_data[,-1],mfinal=70,coeflearn="Zhu")
 end=Sys.time()
 end-begin
 #48.54448 mins
-#39.60549 mins(w/gray)
+#39.60549 mins(w/o gray)
 
 pred_begin=Sys.time()
 pred_adabag=predict.boosting(adabag_fit,newdata = test_data[,-1])
@@ -144,5 +148,5 @@ pred_end-pred_begin
 mean((as.integer(pred_adabag25$class))!=test_labels)
 ##0.108
 
-save(adabag_fit25,train_index,file="~/Desktop/adabag_model_25.RData")
+#save(adabag_fit25,train_index,file="~/Desktop/adabag_model_25.RData")
 
