@@ -3,7 +3,9 @@
 #############################################################
 
   library("EBImage")
-
+  library("rPython")
+ 
+  
   features<-function(img_dir){
     
     img_names<-list.files(img_dir)
@@ -26,10 +28,10 @@
     colnames(hsv_features)<-c('Image',paste('hsv_',1:1000,sep=""))
     hsv_features$Image<-img_names
 
-    # #gray features
-    # Gbin<-seq(0,1,length.out =  250) 
-    # gray_features<-data.frame(matrix(NA,3000,251))
-    # colnames(gray_features)<-c('Image',paste('gray_',1:250,sep=""))
+    #gray features
+    Gbin<-seq(0,1,length.out =  250)
+    gray_features<-data.frame(matrix(NA,3000,251))
+    colnames(gray_features)<-c('Image',paste('gray_',1:250,sep=""))
 
     for(i in 1:3000){
       print(i)
@@ -54,23 +56,22 @@
        factor(findInterval(hsv_mat[2,],Sbin),levels = 1:10),
        factor(findInterval(hsv_mat[3,],Vbin),levels = 1:10)))
       hsv_features[i,2:1001]<-hsv_df$Freq/(256^2)
-
+      
+      ### Gray
       img_gray<-channel(img,"gray")
       #img<-resize(img,256,256)
       img_mat_gray<-imageData(img_gray)
 
-      ##grey
-      # freq_gray <- as.data.frame(table(factor(findInterval(img_mat_gray, Gbin), levels = 1:250)))
-      # gray_features[i,2:251] <- as.numeric(freq_gray$Freq)/(ncol(img_mat_gray)*nrow(img_mat_gray))
+     
+      freq_gray <- as.data.frame(table(factor(findInterval(img_mat_gray, Gbin), levels = 1:250)))
+      gray_features[i,2:251] <- as.numeric(freq_gray$Freq)/(ncol(img_mat_gray)*nrow(img_mat_gray))
     }
 
     color_features<-merge(rgb_features,hsv_features,by.x = "Image",by.y="Image")
     
     sift_features<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/training_set/sift_train.csv")
     features_sift_color_grey<-cbind(sift_features,color_features[,-1])
-    save(features_sift_color,file="~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/new_features.RData")
-
+    save(features_sift_color,gray_features,file="~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/R_features.RData")
     return(features_sift_color)
   }
 
-#write.csv(color_features,"~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/color_features.csv",row.names = F)

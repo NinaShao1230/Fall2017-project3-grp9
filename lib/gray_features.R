@@ -21,4 +21,4 @@ for(i in 1:3000){
   
 }
 
-write(gray_features,"~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/gray_features.csv")
+write.csv(gray_features,file ="~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/gray_features.csv")

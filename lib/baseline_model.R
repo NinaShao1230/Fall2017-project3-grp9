@@ -1,19 +1,19 @@
 library("gbm")
-
-img_labels<-read.csv("~/Desktop/training_set/label_train.csv")
+setwd('C:/Users/xl2614/Desktop/Fall2017-project3-fall2017-project3-grp9-master/')
+img_labels<-read.csv("./data/training_set/label_train.csv")
 colnames(img_labels)=c("Image","labels")
 #img_labels[,2]<-ifelse(img_labels[,2]==2,1,0)
 
-features_sift<-read.csv("~/Desktop/training_set/sift_train.csv")
-color<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/color_features.csv",as.is = F)
-orb<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/orb_df_tidyver.csv",as.is = F)
-lbp<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/lbp_feature.csv",as.is = F)
-gray<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/gray_features.csv",as.is = F)[,-1]
+features<-read.csv("./data/training_set/sift_train.csv")
+color<-read.csv("./data/color_features.csv",as.is = F)
+orb<-read.csv("./data/orb_df_tidyver.csv",as.is = F)
+lbp<-read.csv("./data/lbp_feature.csv",as.is = F)
+gray<-read.csv("./data/gray_features.csv",as.is = F)[,-1]
 
-features_sift_color<-cbind(features_sift,color[,-1])
-features_sift_color_orb<-cbind(features_sift,color[,-1],orb[,-1])
-features_sift_color_lbp<-cbind(features_sift,color[,-1],lbp[,-1])
-features_sift_color_lbp_gray<-cbind(features_sift,color[,-1],lbp[,-1],gray[,-1])
+features_sift_color<-cbind(features,color[,-1])
+features_sift_color_orb<-cbind(features,color[,-1],orb[,-1])
+features_sift_color_lbp<-cbind(features,color[,-1],lbp[,-1])
+features_sift_color_lbp_gray<-cbind(features,color[,-1],lbp[,-1],gray[,-1])
 
 set.seed(90)
 train_index<-sample(1:3000,floor(nrow(img_labels)*0.75))
@@ -90,23 +90,23 @@ base_fit4<-train(train_data[,-1],train_labels)
 Sys.time()-begin
 
 base_fit_predict4<-predict(base_fit4,test_data[,-1],n.trees = 2000)
-base_fit_predict<-apply(base_fit_predict4[,,1],1,which.max)-1
+base_fit_predict4<-apply(base_fit_predict4[,,1],1,which.max)-1
 result4<-mean(base_fit_predict4!=test_labels)
 
 
 
 ################ base on sift n color n lbp n gray #####################
-train_data<-features_sift_color_lbp_gray[train_index,]
-test_data<-features_sift_color_lbp_gray[-train_index,]
+train_data<-features_sift_color_lbp[train_index,]
+test_data<-features_sift_color_lbp[-train_index,]
 
 begin<-Sys.time()
-base_fit5<-train(train_data[,-1],train_labels)
+base_fit4<-train(train_data[,-1],train_labels)
 Sys.time()-begin
-
-base_fit_predict5<-predict(base_fit5,test_data[,-1],n.trees = 2000)
-base_fit_predict6<-apply(base_fit_predict5[,,1],1,which.max)-1
-result4<-mean(base_fit_predict6!=test_labels)
-
-
-save(train_index,base_fit5,file="~/Desktop/basefit5.RDate")
+#44.66938 mins
+base_fit_predict4<-predict(base_fit4,test_data[,-1],n.trees = 2000)
+base_fit_predict<-apply(base_fit_predict[,,1],1,which.max)-1
+result4<-mean(base_fit_predict3!=test_labels)
+#0.104
+base_fit_sift_color_lbp<-base_fit4
+save(base_fit_sift_color_lbp,train_labels,file = "data/base_fit_sift_color_lbp.RData")
 
