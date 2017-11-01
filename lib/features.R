@@ -85,6 +85,6 @@
     features_sift_color_lbp<-cbind(sift_features,color_features[,-1],lbp_features[,-1])
     features_sift_color_lbp_gray<-cbind(sift_features,color_features[,-1],lbp_features[,-1],gray_features)
     save(features_sift_color_lbp,features_sift_color_lbp_gray,file=paste(img_dir,"/all_features.RData",sep = ""))
-    return(list(Nogray=features_sift_color_lbp,Gray=features_sift_color_lbp_gray))
+    return(list(NoGray=features_sift_color_lbp,Gray=features_sift_color_lbp_gray))
   }
 
