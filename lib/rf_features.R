@@ -21,31 +21,31 @@ features3[] <- lapply(features3, function(x) ifelse(is.na(x), mean(x, na.rm = TR
 set.seed(90)
 n <- nrow(features3)
 index <- sample(n, n*0.75)
-train_features <- features3[index,-1]
-train_labels <- as.factor(features3[index,1])
+train_features <- features3[index,]
+train_labels <- as.factor(labels3[index])
 
-test_features <- features3[-index,-1]
-test_labels <- as.factor(features3[-index,1])
+test_features <- features3[-index,]
+test_labels <- as.factor(labels3[-index])
 
-
-system.time(rf.tree3 <- tuneRF(train_features, as.factor(train_labels), ntreeTry = 100, doBest = T))
+begin <- Sys.time()
+rf.tree3 <- tuneRF(train_features, as.factor(train_labels), ntreeTry = 100, doBest = T)
+end <- Sys.time()
+end - begin
 #1116.943 sec
 
 #system.time(rf.tree3 <- randomForest(x=train_features, y=as.factor(train_labels), mtry = 70, ntree = 100)) 
-# 141.961 sec
+
 
 
 # Training error
-train_pred <- predict(rf.train3, train_features)
+train_pred <- predict(rf.tree3, train_features)
 train_error <- mean(train_pred != train_labels)
 train_error
 
 # Test error
-test_pred <- predict(rf.train3, test_features)
+test_pred <- predict(rf.tree3, test_features)
 test_error <- mean(test_pred != test_labels)
 test_error
-# 0.09866667 and train error = 0.01466667
-# 0.08933333 rf.tree3 train error = 0 ####overfitting
-# 0.1 rf.train3
+# 0.096
 
-save(rf.tree3, file = "~/Desktop/ADS/Fall2017-project3-fall2017-project3-grp9/lib/RF/rf_train3.RData")
+save(rf.tree3, file = "~/Desktop/ADS/Fall2017-project3-fall2017-project3-grp9/data/rf_sift_color_lbp.RData")
