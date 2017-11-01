@@ -44,9 +44,9 @@ def extract_lbp(img_dir,type='train'):
     
     lbp_df=pd.DataFrame(his)
     lbp_df.to_csv("./lbp_"+type+".csv")
-    return(lbp_df)
+    #return(lbp_df)
 
-print("done")  
+#print("done")  
     
     
 #with open("/Users/ninashao/Desktop/Fall2017-project3-fall2017-project3-grp9-master 2/data/lbp_feature.csv", "w") as f:
