@@ -22,11 +22,12 @@ Term: Fall 2017
 		![image](figs/compare.png)
 
 + Possible Improvement: After testing on 750 images, we move forward to find out the most common misclassification cases and the possible improvement in the future. From the following table, we found that our model is more likely to misclassify fried chicken and dogs: 
+		![image](figs/misclassify.png)
 
 
-Add or deselect features: similar textures and colors may cause misclassification. For example, below are two figure samples which are classified as wrong group. Dog and fried chicken in those figures have similar textures and colors. And our model may confuse with those features.  Therefore, one of the possible improvement include further feature selections (add more features or delete "common" features). 
-		![image](figs/errorpic1.png)
-		![image](figs/errorpic2.png)
+	+ Add or deselect features: similar textures and colors may cause misclassification. For example, below are two figure samples which are classified as wrong group. Dog and fried chicken in those figures have similar textures and colors. And our model may confuse with those features.  Therefore, one of the possible improvement include further feature selections (add more features or delete "common" features).
+	![image](figs/errorpic1.png)
+	![image](figs/errorpic2.png)
 		
 		
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement.
