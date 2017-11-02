@@ -4,10 +4,10 @@ train_baseline <- function(dat_train, label_train, par){
   library("gbm")
   if(par){
     # data_withGray=dat_test$Gray
-    data_NoGray=dat_test$NoGray
+    data_NoGray=dat_train$NoGray
   }else{
     # data_withGray=dat_test
-    data_NoGray=dat_test
+    data_NoGray=dat_train
   }
   ##baseline model
   train_base <- function(dat_train, label_train, par=NULL){
@@ -34,10 +34,10 @@ train_baseline <- function(dat_train, label_train, par){
 
 train_ada <- function(dat_train, label_train, depth=30,par){
   if(par){
-    data_withGray=dat_test$Gray
+    data_withGray=dat_train$Gray
     #data_NoGray=dat_test$NoGray
   }else{
-    data_withGray=dat_test
+    data_withGray=dat_train
     #data_NoGray=dat_test
   }
   

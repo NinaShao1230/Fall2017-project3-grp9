@@ -3,12 +3,12 @@
 #############################################################
 
   library("EBImage")
-  library("rPython")
+  #library("rPython")
  
   
   features<-function(img_dir,type="train"){
     
-    img_names<-list.files(img_dir)
+  img_names<-list.files(img_dir)
 
     Rbin<-seq(0,1,length.out =  10) 
     Gbin<-seq(0,1,length.out = 10)
@@ -34,14 +34,14 @@
     colnames(gray_features)<-c('Image',paste('gray_',1:250,sep=""))
 
     for(i in 1:3000){
-      print(i)
+      #print(i)
       img<-readImage(paste(img_dir,img_names[i],sep=""))
       img<-resize(img,256,256)
       if(length(dim(img))!=3){
-        img_gray<-channel(img,"gray")
-        img_mat_gray<-imageData(img_gray)
-        freq_gray <- as.data.frame(table(factor(findInterval(img_mat_gray, Gbin), levels = 1:250)))
-        gray_features[i,2:251] <- as.numeric(freq_gray$Freq)/(ncol(img_mat_gray)*nrow(img_mat_gray))
+        # img_gray<-channel(img,"gray")
+        # img_mat_gray<-imageData(img_gray)
+        # freq_gray <- as.data.frame(table(factor(findInterval(img_mat_gray, Gbin), levels = 1:250)))
+        # gray_features[i,2:251] <- as.numeric(freq_gray$Freq)/(ncol(img_mat_gray)*nrow(img_mat_gray))
         next
       }
       #img<-resize(img,256,256)
@@ -72,19 +72,19 @@
 
     color_features<-merge(rgb_features,hsv_features,by.x = "Image",by.y="Image")
     
-    sift_features<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/training_set/sift_train.csv")
+    sift_features<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/training_set//sift_train.csv")
     
     ############################################
     ####### construct in python first ##########
     ############################################
-    lbp_features<-read.csv(paste("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/training_set/lbp_",type,".csv",sep = ""))
+    lbp_features<-read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/lbp_feature.csv")
     
-    write.csv(features_sift_color_lbp,"~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/output/train_features_sift_color_lbp.csv")
-    write.csv(features_sift_color_lbp_gray,"~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/output/train_features_sift_color_lbp_gray.csv")
+    # write.csv(features_sift_color_lbp,"~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/output/train_features_sift_color_lbp.csv")
+    # write.csv(features_sift_color_lbp_gray,"~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/output/train_features_sift_color_lbp_gray.csv")
     
     features_sift_color_lbp<-cbind(sift_features,color_features[,-1],lbp_features[,-1])
     features_sift_color_lbp_gray<-cbind(sift_features,color_features[,-1],lbp_features[,-1],gray_features)
-    save(features_sift_color_lbp,features_sift_color_lbp_gray,file=paste(img_dir,"/all_features.RData",sep = ""))
+    #save(features_sift_color_lbp,features_sift_color_lbp_gray,file="./data/train_features.RData")
     return(list(NoGray=features_sift_color_lbp,Gray=features_sift_color_lbp_gray))
   }
 

@@ -4,13 +4,12 @@ author: "Xinhu Wang, Xin Luo, Sihui Shao, Yina Wei"
 date: "November 1, 2017"
 output:
 pdf_document: default
-html_document: default
 ---
 In your final repo, there should be an R markdown file that organizes **all computational steps** for evaluating your proposed image classification framework. 
 
 This file is currently a template for running evaluation experiments of image analysis (or any predictive modeling). You should update it according to your codes but following precisely the same structure. 
 
-```{r}
+```{r,message=F,warning=F}
 if(!require("EBImage")){
   source("https://bioconductor.org/biocLite.R")
   biocLite("EBImage")
@@ -19,9 +18,6 @@ if(!require("gbm")){
   install.packages("gbm")
 }
 
-if(!require("RandomForest")){
-  install.packages("RandomForest")
-}
 
 if(!require("adabag")){
   install.packages("adabag")
@@ -29,7 +25,6 @@ if(!require("adabag")){
 
 library("EBImage")
 library("gbm")
-library("RandomForest")
 library("adabag")
 
 ```
@@ -43,7 +38,7 @@ setwd("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-
 ```
 
 ```{r}
-img_train_dir <- paste(getwd(),"/data/training_set/images/",sep="")
+img_train_dir <- paste("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9","/data/training_set/images/",sep="")
 img_test_dir <- "../data/"#going to be changed when testing
 ```
 
@@ -60,8 +55,9 @@ In this chunk, ,we have a set of controls for the evaluation experiments.
 
 ```{r exp_setup}
 run.feature.train=TRUE # process features for training set
-run.test=TRUE # run evaluation on an independent test set
-run.train=FALSE #run the training process
+run.feature.test=FALSE # process features for test set
+run.test=FALSE # run evaluation on an independent test set
+run.train=TRUE #run the training process
 new.features=TRUE #use the new dataset (or just original sift data)
 baseline=FALSE # Use the baseline model
 ada_depth=c(30,70,90)[1]
@@ -75,7 +71,7 @@ ada_depth=c(30,70,90)[1]
 For the example of zip code digits, we code digit 9 as "1" and digit 7 as "0" for binary classification.
 
 ```{r train_label}
-label_train <- read.csv("./data/training_set/label_train.csv")[,2]
+label_train <- read.csv("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/training_set/label_train.csv")[,2]
 ```
 
 ### Step 3: construct visual feature
@@ -85,26 +81,28 @@ For this simple example, we use the row averages of raw pixel values as the visu
 `feature.R` should be the wrapper for all your feature engineering functions and options. The function `feature( )` should have options that correspond to different scenarios for your project and produces an R object that contains features that are required by all the models you are going to evaluate later. 
 
 ```{r feature}
-source("../lib/features.R")
+tm_feature_train <- NA
+source("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/lib/features.R")
 if(!new.features){
-  dat_test<-read.csv('./data/training_set/sift_train.csv')
+  dat_test<-read.csv('~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/data/training_set/sift_train.csv')
 }else{
   if(run.feature.train){
-    tm_feature_train <- NA
+    
     tm_feature_train <- system.time(dat_train<- features(img_train_dir,"train"))
-    save(dat_train, file="./output/feature_train.RData")
+    save(dat_train, file="~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/output/feature_train.RData")
   }else{
-    load("./output/feature_train.RData")
+    load("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/output/feature_train.RData")
   }
 }
-
-
+tm_feature_test <- NA
+if(run.feature.test){
 if(!new.features){
   dat_test<-read.csv('./data/test_set/sift_test.csv')
 }else{
-  tm_feature_test <- NA
+  
   tm_feature_test <- system.time(dat_test <- features(img_test_dir,"test"))
   save(dat_test, file="./output/feature_test.RData")
+}
 }
 
 ```
@@ -113,23 +111,25 @@ if(!new.features){
 Call the train model and test model from library. 
 
 ```{r loadlib}
-source("../lib/train.R")
-source("../lib/test.R")
+source("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/lib/train.R")
+source("~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/lib/test.R")
 ```
 
 * Train the model with the entire training set using the selected model (model parameter) via cross-validation.
 ```{r final_train}
+tm_train=NA
+#load('~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/output/feature_train.RData')
 if(!run.train){
   load(paste0("./output/fit_train_",ada_depth,".RData",sep="" ))
 }else{
   if(baseline){
-    tm_train=NA
-    tm_train <- system.time(fit_train_ada <- train_baseline(dat_train, label_train, new.features))
-    save(fit_train, file="../output/fit_train_new.RData")
+    
+    tm_train <- system.time(fit_train_base <- train_baseline(dat_train, label_train, new.features))
+    save(fit_train_base, file="../output/fit_train_new.RData")
   }else{
     tm_train=NA
-    tm_train <- system.time(fit_train_base <- train_ada(dat_train, label_train,ada_depth,new.features))
-    save(fit_train, file="../output/fit_train_new.RData")
+    tm_train <- system.time(fit_train_ada <- train_ada(dat_train, label_train,ada_depth,new.features))
+    save(fit_train_ada, file="~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/output/fit_train_new.RData")
   }
 }
 ```
@@ -145,7 +145,7 @@ if(run.test){
     save(pred_test, file="../output/pred_test.RData")
   }else{
     tm_test <- system.time(pred_test <- test_ada(fit_train_base, dat_test,new.features))
-    save(pred_test, file="../output/pred_test.RData")
+    save(pred_test, file="~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/output/pred_test.RData")
   }
 }
 ```
@@ -153,8 +153,10 @@ if(run.test){
 ### Summarize Running Time
 Prediction performance matters, so does the running times for constructing features and for training the model, especially when the computation resource is limited. 
 ```{r running_time}
+
 cat("Time for constructing training features=", tm_feature_train[1], "s \n")
 cat("Time for constructing testing features=", tm_feature_test[1], "s \n")
 cat("Time for training model=", tm_train[1], "s \n")
 cat("Time for making prediction=", tm_test[1], "s \n")
+
 ```

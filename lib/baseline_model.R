@@ -1,5 +1,5 @@
-library("gbm")
-setwd('~/Desktop/[ADS]Advanced Data Science/Fall2017-project3-fall2017-project3-grp9/')
+ library("gbm")
+setwd('~/Desktop/ADS/Fall2017-project3-fall2017-project3-grp9/')
 img_labels<-read.csv("./data/training_set/label_train.csv")
 colnames(img_labels)=c("Image","labels")
 #img_labels[,2]<-ifelse(img_labels[,2]==2,1,0)
@@ -35,8 +35,8 @@ train <- function(dat_train, label_train, par=NULL){
                      interaction.depth=depth, 
                      bag.fraction = 0.5,
                      verbose=FALSE)
-  best_iter <- gbm.perf(boost.fit, method="cv", cv.folds>1,plot.it = FALSE)
-  return(fit=list(fit_gbm,best_iter))
+  # best_iter <- gbm.perf(boost.fit, method="cv", cv.folds>1,plot.it = FALSE)
+  return(fit_gbm)
 }
 
 
