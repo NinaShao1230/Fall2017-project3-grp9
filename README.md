@@ -18,7 +18,9 @@ Term: Fall 2017
 	+ This project includes three stages, features extractions, model selections and prediction. In the feature extractions, we tried to extract color features, LBP, gray, HOG and ORB features. For 3,000 images, every feture extraction method spends 10-15 mins.For model selections, we tried Xgboost, GBM, adaboost, random forest, naive bayes, SVM (linear & kernel), and convolutional neutral network(CNN). 
 	+ Baseline model: GBM model with all SIFT features. Test Error: 0.21, training time: 35 mins.
 	+ Advanced model: Adaboost model with all SIFT, color, LBP and gray features. Test Error: 0.085, training time: 26 mins. 
-
+	+ Here is a brief comparison for the models: 
+		![image](figs/compare.png)
+		
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement.
 + Xin Luo: Construct the main/train/test/features files, extract color/gray/blob/mser features, train/test baseline, Xgboost and Adaboost models
 + Xinghu Wang: Extract HOG features, train/test Random Forest Model, prepare presentation and presentor 
